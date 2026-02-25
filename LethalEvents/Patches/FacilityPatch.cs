@@ -1,3 +1,4 @@
+using com.github.luckofthelefty.LethalEvents.Helpers;
 using com.github.luckofthelefty.LethalEvents.Server;
 using HarmonyLib;
 using System.Collections.Generic;
@@ -9,8 +10,10 @@ internal static class LandminePatch
 {
     [HarmonyPatch(nameof(Landmine.ExplodeMineClientRpc))]
     [HarmonyPostfix]
-    private static void ExplodeMineClientRpcPatch()
+    private static void ExplodeMineClientRpcPatch(Landmine __instance)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+
         EventServer.SendEvent("landmine_exploded", new Dictionary<string, object>());
     }
 }
@@ -20,18 +23,18 @@ internal static class TurretPatch
 {
     [HarmonyPatch(nameof(Turret.SetToModeClientRpc))]
     [HarmonyPostfix]
-    #pragma warning disable Harmony003
-    private static void SetToModeClientRpcPatch(int modeIndex)
-    #pragma warning restore Harmony003
+    private static void SetToModeClientRpcPatch(Turret __instance, int mode)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+
         // TurretMode: 0 = Detection, 1 = Charging, 2 = Firing, 3 = Berserk
         string[] modeNames = { "Detection", "Charging", "Firing", "Berserk" };
-        string mode = modeIndex >= 0 && modeIndex < modeNames.Length ? modeNames[modeIndex] : "Unknown";
+        string modeName = mode >= 0 && mode < modeNames.Length ? modeNames[mode] : "Unknown";
 
         EventServer.SendEvent("turret_mode_changed", new Dictionary<string, object>
         {
-            { "mode", mode },
-            { "modeIndex", modeIndex }
+            { "mode", modeName },
+            { "modeIndex", mode }
         });
     }
 }
@@ -43,6 +46,8 @@ internal static class TeleporterPatch
     [HarmonyPostfix]
     private static void PressTeleportButtonClientRpcPatch(ShipTeleporter __instance)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+
         EventServer.SendEvent("teleporter_used", new Dictionary<string, object>
         {
             { "isInverse", __instance.isInverseTeleporter }

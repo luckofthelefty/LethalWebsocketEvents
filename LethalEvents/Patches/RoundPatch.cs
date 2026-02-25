@@ -1,5 +1,7 @@
+using com.github.luckofthelefty.LethalEvents.Helpers;
 using com.github.luckofthelefty.LethalEvents.Server;
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 
 namespace com.github.luckofthelefty.LethalEvents.Patches;
@@ -7,6 +9,12 @@ namespace com.github.luckofthelefty.LethalEvents.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
 internal static class RoundPatch
 {
+    private static DateTime _lastDayChangedTime = DateTime.MinValue;
+    private static string _lastDayChangedKey = "";
+    private static readonly TimeSpan EventDebounce = TimeSpan.FromSeconds(2);
+
+    private static DateTime _lastShipLandedTime = DateTime.MinValue;
+
     [HarmonyPatch(nameof(StartOfRound.StartGame))]
     [HarmonyPostfix]
     private static void StartGamePatch()
@@ -48,6 +56,15 @@ internal static class RoundPatch
     {
         string moon = StartOfRound.Instance?.currentLevel?.PlanetName ?? "Unknown";
         string weather = StartOfRound.Instance?.currentLevel?.currentWeather.ToString() ?? "None";
+        string key = $"{moon}|{weather}";
+
+        // Debounce — this method fires multiple times during player joins and level loads
+        var now = DateTime.UtcNow;
+        if (now - _lastDayChangedTime < EventDebounce && _lastDayChangedKey == key)
+            return;
+
+        _lastDayChangedTime = now;
+        _lastDayChangedKey = key;
 
         EventServer.SendEvent("day_changed", new Dictionary<string, object>
         {
@@ -58,8 +75,10 @@ internal static class RoundPatch
 
     [HarmonyPatch(nameof(StartOfRound.ChangeLevelClientRpc))]
     [HarmonyPostfix]
-    private static void ChangeLevelClientRpcPatch()
+    private static void ChangeLevelClientRpcPatch(StartOfRound __instance)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+
         string moon = StartOfRound.Instance?.currentLevel?.PlanetName ?? "Unknown";
         string weather = StartOfRound.Instance?.currentLevel?.currentWeather.ToString() ?? "None";
 
@@ -74,6 +93,13 @@ internal static class RoundPatch
     [HarmonyPostfix]
     private static void OpeningDoorsSequencePatch()
     {
+        // Debounce — coroutine enumerator fires on every iteration
+        var now = DateTime.UtcNow;
+        if (now - _lastShipLandedTime < EventDebounce)
+            return;
+
+        _lastShipLandedTime = now;
+
         string moon = StartOfRound.Instance?.currentLevel?.PlanetName ?? "Unknown";
 
         EventServer.SendEvent("ship_landed", new Dictionary<string, object>
@@ -88,8 +114,10 @@ internal static class QuotaPatch
 {
     [HarmonyPatch(nameof(TimeOfDay.SyncNewProfitQuotaClientRpc))]
     [HarmonyPostfix]
-    private static void SyncNewProfitQuotaClientRpcPatch()
+    private static void SyncNewProfitQuotaClientRpcPatch(TimeOfDay __instance)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+
         int newQuota = TimeOfDay.Instance?.profitQuota ?? 0;
         int quotaIndex = (TimeOfDay.Instance?.timesFulfilledQuota ?? 0) + 1;
 

@@ -13,14 +13,38 @@ internal static class PlayerDamagePatch
     [HarmonyPostfix]
     private static void DamagePlayerClientRpcPatch(PlayerControllerB __instance, int damageNumber)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
+
         string playerName = PlayerUtils.GetPlayerName(__instance);
 
-        EventServer.SendEvent("player_damage", new Dictionary<string, object>
+        // Negative damage is healing (e.g. -100 from revive/heal)
+        if (damageNumber < 0)
+        {
+            EventServer.SendEvent("player_healed", new Dictionary<string, object>
+            {
+                { "player", playerName },
+                { "amount", -damageNumber },
+                { "health", __instance.health }
+            });
+            return;
+        }
+
+        string enemyName = EnemyUtils.FindAttackingEnemy(__instance);
+
+        var data = new Dictionary<string, object>
         {
             { "player", playerName },
             { "damage", damageNumber },
             { "health", __instance.health },
             { "critical", __instance.health <= 0 }
-        });
+        };
+
+        if (enemyName != null)
+        {
+            data["enemy"] = enemyName;
+        }
+
+        EventServer.SendEvent("player_damage", data);
     }
 }

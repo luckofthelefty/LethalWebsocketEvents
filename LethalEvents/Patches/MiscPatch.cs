@@ -6,19 +6,20 @@ using System.Collections.Generic;
 
 namespace com.github.luckofthelefty.LethalEvents.Patches;
 
-[HarmonyPatch(typeof(StartOfRound))]
+[HarmonyPatch(typeof(PlayerControllerB))]
 internal static class ConnectionPatch
 {
-    [HarmonyPatch(nameof(StartOfRound.OnPlayerConnectedClientRpc))]
+    // Use SendNewPlayerValuesClientRpc instead of OnPlayerConnectedClientRpc
+    // because player names aren't synced yet when OnPlayerConnected fires.
+    // This RPC fires after the player's username/cosmetics are broadcast to all clients.
+    [HarmonyPatch(nameof(PlayerControllerB.SendNewPlayerValuesClientRpc))]
     [HarmonyPostfix]
-    private static void OnPlayerConnectedClientRpcPatch(ulong clientId)
+    private static void SendNewPlayerValuesClientRpcPatch(PlayerControllerB __instance)
     {
-        var playerScript = PlayerUtils.GetPlayerScriptByClientId(clientId);
-        string playerName = PlayerUtils.GetPlayerName(playerScript);
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
 
-        int playerCount = GameNetworkManager.Instance?.connectedPlayers
-            ?? (StartOfRound.Instance?.connectedPlayersAmount + 1)
-            ?? 1;
+        string playerName = PlayerUtils.GetPlayerName(__instance);
+        int playerCount = PlayerUtils.GetConnectedPlayerCount();
 
         EventServer.SendEvent("player_joined", new Dictionary<string, object>
         {
@@ -26,7 +27,11 @@ internal static class ConnectionPatch
             { "playerCount", playerCount }
         });
     }
+}
 
+[HarmonyPatch(typeof(StartOfRound))]
+internal static class DisconnectPatch
+{
     [HarmonyPatch(nameof(StartOfRound.OnPlayerDC))]
     [HarmonyPostfix]
     private static void OnPlayerDCPatch(int playerObjectNumber)
@@ -39,9 +44,7 @@ internal static class ConnectionPatch
             playerName = PlayerUtils.GetPlayerName(StartOfRound.Instance.allPlayerScripts[playerObjectNumber]);
         }
 
-        int playerCount = GameNetworkManager.Instance?.connectedPlayers
-            ?? (StartOfRound.Instance?.connectedPlayersAmount + 1)
-            ?? 0;
+        int playerCount = PlayerUtils.GetConnectedPlayerCount();
 
         EventServer.SendEvent("player_left", new Dictionary<string, object>
         {
@@ -58,6 +61,8 @@ internal static class EmotePatch
     [HarmonyPostfix]
     private static void PerformEmotePatch(PlayerControllerB __instance, int emoteID)
     {
+        if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
+
         string playerName = PlayerUtils.GetPlayerName(__instance);
 
         EventServer.SendEvent("player_emote", new Dictionary<string, object>

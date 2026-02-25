@@ -3,6 +3,7 @@ using com.github.luckofthelefty.LethalEvents.Server;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.github.luckofthelefty.LethalEvents.Patches;
 
@@ -13,26 +14,17 @@ internal static class PlayerDeathPatch
     [HarmonyPostfix]
     private static void KillPlayerClientRpcPatch(PlayerControllerB __instance, int playerId, int causeOfDeath)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+
         var playerScript = StartOfRound.Instance?.allPlayerScripts != null && playerId >= 0 && playerId < StartOfRound.Instance.allPlayerScripts.Length
             ? StartOfRound.Instance.allPlayerScripts[playerId]
             : __instance;
 
+        if (!PlayerUtils.ShouldTrackPlayer(playerScript)) return;
+
         string playerName = PlayerUtils.GetPlayerName(playerScript);
         string cause = ((CauseOfDeath)causeOfDeath).ToString();
-
-        // Try to determine what enemy killed the player
-        string enemyName = null;
-        if (playerScript.causeOfDeath == CauseOfDeath.Mauling ||
-            playerScript.causeOfDeath == CauseOfDeath.Strangulation ||
-            playerScript.causeOfDeath == CauseOfDeath.Crushing ||
-            playerScript.causeOfDeath == CauseOfDeath.Bludgeoning)
-        {
-            // Check if there's a reference to the killer enemy via the body
-            if (playerScript.deadBody != null && playerScript.deadBody.causeOfDeath != CauseOfDeath.Unknown)
-            {
-                // The enemy type is harder to get directly, but we can check nearby enemies
-            }
-        }
+        string enemyName = EnemyUtils.FindAttackingEnemy(playerScript);
 
         var data = new Dictionary<string, object>
         {

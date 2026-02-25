@@ -46,8 +46,24 @@ internal class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(TurretPatch));
         _harmony.PatchAll(typeof(TeleporterPatch));
 
+        // Monster-specific patches
+        _harmony.PatchAll(typeof(BrackenPatch));
+        _harmony.PatchAll(typeof(JesterPatch));
+        _harmony.PatchAll(typeof(GhostGirlPatch));
+        _harmony.PatchAll(typeof(CoilheadPatch));
+        _harmony.PatchAll(typeof(MaskedPatch));
+        _harmony.PatchAll(typeof(NutcrackerPatch));
+        _harmony.PatchAll(typeof(ForestGiantPatch));
+        _harmony.PatchAll(typeof(SnareFleaPatch));
+        _harmony.PatchAll(typeof(SpiderPatch));
+        _harmony.PatchAll(typeof(BlobPatch));
+        _harmony.PatchAll(typeof(ThumperPatch));
+        _harmony.PatchAll(typeof(EyelessDogPatch));
+        _harmony.PatchAll(typeof(BaboonHawkPatch));
+
         // Connection/misc patches
         _harmony.PatchAll(typeof(ConnectionPatch));
+        _harmony.PatchAll(typeof(DisconnectPatch));
         _harmony.PatchAll(typeof(VoteToLeavePatch));
 
         Task.Run(EventServer.Initialize);

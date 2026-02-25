@@ -14,6 +14,9 @@ internal static class ItemPatch
     [HarmonyPostfix]
     private static void GrabObjectClientRpcPatch(PlayerControllerB __instance, NetworkObjectReference grabbedObject)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
+
         string playerName = PlayerUtils.GetPlayerName(__instance);
         string itemName = "Unknown";
         int scrapValue = 0;
@@ -41,6 +44,9 @@ internal static class ItemPatch
     [HarmonyPostfix]
     private static void ThrowObjectClientRpcPatch(PlayerControllerB __instance, bool droppedInElevator, bool droppedInShipRoom)
     {
+        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
+
         string playerName = PlayerUtils.GetPlayerName(__instance);
 
         EventServer.SendEvent("item_dropped", new Dictionary<string, object>
@@ -54,6 +60,7 @@ internal static class ItemPatch
 [HarmonyPatch(typeof(LungProp))]
 internal static class ApparatusPatch
 {
+    // DisconnectFromMachinery is NOT a ClientRpc — no dedup guard needed
     [HarmonyPatch(nameof(LungProp.DisconnectFromMachinery))]
     [HarmonyPostfix]
     private static void DisconnectFromMachineryPatch(LungProp __instance)
@@ -62,6 +69,7 @@ internal static class ApparatusPatch
         string playerName = "Unknown";
         if (__instance.isHeld && __instance.playerHeldBy != null)
         {
+            if (!PlayerUtils.ShouldTrackPlayer(__instance.playerHeldBy)) return;
             playerName = PlayerUtils.GetPlayerName(__instance.playerHeldBy);
         }
 
