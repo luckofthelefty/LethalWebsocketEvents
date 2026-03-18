@@ -77,7 +77,7 @@ internal static class RoundPatch
     [HarmonyPostfix]
     private static void ChangeLevelClientRpcPatch(StartOfRound __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess("moon_changed")) return;
 
         string moon = StartOfRound.Instance?.currentLevel?.PlanetName ?? "Unknown";
         string weather = StartOfRound.Instance?.currentLevel?.currentWeather.ToString() ?? "None";
@@ -116,7 +116,7 @@ internal static class QuotaPatch
     [HarmonyPostfix]
     private static void SyncNewProfitQuotaClientRpcPatch(TimeOfDay __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess("quota_fulfilled")) return;
 
         int newQuota = TimeOfDay.Instance?.profitQuota ?? 0;
         int quotaIndex = (TimeOfDay.Instance?.timesFulfilledQuota ?? 0) + 1;

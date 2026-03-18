@@ -30,7 +30,7 @@ internal static class EnemyPatch
     [HarmonyPostfix]
     private static void KillEnemyClientRpcPatch(EnemyAI __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"enemy_killed_{__instance.GetInstanceID()}")) return;
         if (__instance.enemyType == null) return;
 
         string enemyName = __instance.enemyType.enemyName ?? __instance.GetType().Name;
@@ -47,7 +47,7 @@ internal static class EnemyPatch
     [HarmonyPostfix]
     private static void SwitchToBehaviourClientRpcPatch(EnemyAI __instance, int stateIndex)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"enemy_state_{__instance.GetInstanceID()}_{stateIndex}")) return;
         if (__instance.enemyType == null) return;
 
         string enemyName = __instance.enemyType.enemyName ?? __instance.GetType().Name;
@@ -64,7 +64,7 @@ internal static class EnemyPatch
     [HarmonyPostfix]
     private static void HitEnemyClientRpcPatch(EnemyAI __instance, int force, int playerWhoHit, bool playHitSFX, int hitID)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"enemy_hit_{__instance.GetInstanceID()}_{hitID}")) return;
         if (__instance.enemyType == null) return;
 
         string enemyName = __instance.enemyType.enemyName ?? __instance.GetType().Name;

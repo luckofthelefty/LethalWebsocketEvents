@@ -13,7 +13,7 @@ internal static class BrackenPatch
     [HarmonyPostfix]
     private static void KillPlayerAnimationClientRpcPatch(FlowermanAI __instance, int playerObjectId)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"bracken_grab_{playerObjectId}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerObjectId);
 
@@ -32,7 +32,7 @@ internal static class JesterPatch
     [HarmonyPostfix]
     private static void KillPlayerClientRpcPatch(JesterAI __instance, int playerId)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"jester_kill_{playerId}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerId);
 
@@ -51,7 +51,7 @@ internal static class GhostGirlPatch
     [HarmonyPostfix]
     private static void ChooseNewHauntingPlayerClientRpcPatch(DressGirlAI __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"ghost_haunt_{__instance.GetInstanceID()}")) return;
 
         string playerName = "Unknown";
         if (__instance.hauntingPlayer != null)
@@ -72,7 +72,7 @@ internal static class CoilheadPatch
     [HarmonyPostfix]
     private static void SetAnimationGoClientRpcPatch(SpringManAI __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"coilhead_go_{__instance.GetInstanceID()}")) return;
 
         EventServer.SendEvent("coilhead_moving", new Dictionary<string, object>());
     }
@@ -81,7 +81,7 @@ internal static class CoilheadPatch
     [HarmonyPostfix]
     private static void SetAnimationStopClientRpcPatch(SpringManAI __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"coilhead_stop_{__instance.GetInstanceID()}")) return;
 
         EventServer.SendEvent("coilhead_stopped", new Dictionary<string, object>());
     }
@@ -95,7 +95,7 @@ internal static class MaskedPatch
     [HarmonyPostfix]
     private static void CreateMimicClientRpcPatch(MaskedPlayerEnemy __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"masked_mimic_{__instance.GetInstanceID()}")) return;
 
         string mimicking = __instance.mimickingPlayer != null
             ? PlayerUtils.GetPlayerName(__instance.mimickingPlayer)
@@ -116,7 +116,7 @@ internal static class NutcrackerPatch
     [HarmonyPostfix]
     private static void FireGunClientRpcPatch(NutcrackerEnemyAI __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"nutcracker_shot_{__instance.GetInstanceID()}")) return;
 
         EventServer.SendEvent("nutcracker_shot", new Dictionary<string, object>());
     }
@@ -130,7 +130,7 @@ internal static class ForestGiantPatch
     [HarmonyPostfix]
     private static void GrabPlayerClientRpcPatch(ForestGiantAI __instance, int playerId)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"giant_grab_{playerId}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerId);
 
@@ -149,7 +149,7 @@ internal static class SnareFleaPatch
     [HarmonyPostfix]
     private static void ClingToPlayerClientRpcPatch(CentipedeAI __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"snare_flea_{__instance.GetInstanceID()}")) return;
 
         string playerName = "Unknown";
         if (__instance.clingingToPlayer != null)
@@ -170,7 +170,7 @@ internal static class SpiderPatch
     [HarmonyPostfix]
     private static void PlayerTripWebClientRpcPatch(SandSpiderAI __instance, int playerNum)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"spider_web_{__instance.GetInstanceID()}_{playerNum}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerNum);
 
@@ -189,7 +189,7 @@ internal static class BlobPatch
     [HarmonyPostfix]
     private static void SlimeKillPlayerEffectClientRpcPatch(BlobAI __instance, int playerKilled)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"blob_kill_{playerKilled}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerKilled);
 
@@ -208,7 +208,7 @@ internal static class ThumperPatch
     [HarmonyPostfix]
     private static void HitPlayerClientRpcPatch(CrawlerAI __instance, int playerId)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"thumper_hit_{playerId}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerId);
 
@@ -227,7 +227,7 @@ internal static class EyelessDogPatch
     [HarmonyPostfix]
     private static void KillPlayerClientRpcPatch(MouthDogAI __instance, int playerId)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"dog_kill_{playerId}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerId);
 
@@ -246,7 +246,7 @@ internal static class BaboonHawkPatch
     [HarmonyPostfix]
     private static void StabPlayerDeathAnimClientRpcPatch(BaboonBirdAI __instance, int playerObject)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"baboon_stab_{playerObject}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(playerObject);
 

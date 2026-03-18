@@ -14,7 +14,7 @@ internal static class ItemPatch
     [HarmonyPostfix]
     private static void GrabObjectClientRpcPatch(PlayerControllerB __instance, NetworkObjectReference grabbedObject)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"item_grab_{__instance.GetInstanceID()}")) return;
         if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
 
         string playerName = PlayerUtils.GetPlayerName(__instance);
@@ -44,7 +44,7 @@ internal static class ItemPatch
     [HarmonyPostfix]
     private static void ThrowObjectClientRpcPatch(PlayerControllerB __instance, bool droppedInElevator, bool droppedInShipRoom)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"item_drop_{__instance.GetInstanceID()}")) return;
         if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
 
         string playerName = PlayerUtils.GetPlayerName(__instance);

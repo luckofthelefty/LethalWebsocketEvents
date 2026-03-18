@@ -14,7 +14,7 @@ internal static class PlayerDeathPatch
     [HarmonyPostfix]
     private static void KillPlayerClientRpcPatch(PlayerControllerB __instance, int playerId, int causeOfDeath)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"death_{playerId}")) return;
 
         var playerScript = StartOfRound.Instance?.allPlayerScripts != null && playerId >= 0 && playerId < StartOfRound.Instance.allPlayerScripts.Length
             ? StartOfRound.Instance.allPlayerScripts[playerId]

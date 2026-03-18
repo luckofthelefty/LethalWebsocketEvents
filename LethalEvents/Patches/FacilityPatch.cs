@@ -12,7 +12,7 @@ internal static class LandminePatch
     [HarmonyPostfix]
     private static void ExplodeMineClientRpcPatch(Landmine __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"landmine_{__instance.GetInstanceID()}")) return;
 
         EventServer.SendEvent("landmine_exploded", new Dictionary<string, object>());
     }
@@ -25,7 +25,7 @@ internal static class TurretPatch
     [HarmonyPostfix]
     private static void SetToModeClientRpcPatch(Turret __instance, int mode)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"turret_{__instance.GetInstanceID()}_{mode}")) return;
 
         // TurretMode: 0 = Detection, 1 = Charging, 2 = Firing, 3 = Berserk
         string[] modeNames = { "Detection", "Charging", "Firing", "Berserk" };
@@ -46,7 +46,7 @@ internal static class TeleporterPatch
     [HarmonyPostfix]
     private static void PressTeleportButtonClientRpcPatch(ShipTeleporter __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"teleporter_{__instance.GetInstanceID()}")) return;
 
         EventServer.SendEvent("teleporter_used", new Dictionary<string, object>
         {

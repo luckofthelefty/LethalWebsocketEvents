@@ -16,7 +16,7 @@ internal static class ConnectionPatch
     [HarmonyPostfix]
     private static void SendNewPlayerValuesClientRpcPatch(PlayerControllerB __instance)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"player_joined_{__instance.GetInstanceID()}")) return;
 
         string playerName = PlayerUtils.GetPlayerName(__instance);
         int playerCount = PlayerUtils.GetConnectedPlayerCount();

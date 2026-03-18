@@ -1,5 +1,6 @@
-using System.Reflection;
+using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace com.github.luckofthelefty.LethalEvents.Helpers;
 
@@ -8,9 +9,11 @@ internal static class NetworkUtils
     public static bool IsConnected => NetworkManager.Singleton?.IsConnectedClient ?? false;
     public static bool IsServer => NetworkManager.Singleton?.IsServer ?? false;
 
-    // Cached reflection for __rpc_exec_stage (internal field in NetworkBehaviour)
-    private static readonly FieldInfo _rpcExecStageField =
-        typeof(NetworkBehaviour).GetField("__rpc_exec_stage", BindingFlags.Instance | BindingFlags.NonPublic);
+    // Frame-based deduplication: track which events already fired this frame.
+    // On a host, Harmony postfixes on ClientRpc methods fire twice per frame
+    // (once for the server dispatch, once for the client execution).
+    // This replaces the old __rpc_exec_stage reflection which was broken on solo host.
+    private static readonly Dictionary<string, int> _lastProcessedFrame = new();
 
     public static ulong GetLocalClientId()
     {
@@ -23,19 +26,16 @@ internal static class NetworkUtils
     }
 
     /// <summary>
-    /// Returns true if a ClientRpc is in the actual client execution stage.
-    /// On the host, ClientRpc methods are called twice:
-    ///   1. Initial call (__rpc_exec_stage = None) — serializes and dispatches the RPC, returns early
-    ///   2. Client execution (__rpc_exec_stage = Client) — actually runs the method body
-    /// Harmony postfix fires after BOTH calls, causing duplicate events.
-    /// Use this guard at the top of every ClientRpc postfix to skip the dispatch call.
+    /// Returns true the first time this eventKey is seen in the current frame,
+    /// false on subsequent calls within the same frame. Use at the top of every
+    /// ClientRpc postfix to prevent duplicate events on the host.
     /// </summary>
-    public static bool IsClientRpcExecution(NetworkBehaviour instance)
+    public static bool ShouldProcess(string eventKey)
     {
-        if (instance == null || _rpcExecStageField == null) return true;
-
-        // __RpcExecStage: None = 0, Server = 1, Client = 2
-        int stage = (int)_rpcExecStageField.GetValue(instance);
-        return stage == 2; // Client
+        int frame = Time.frameCount;
+        if (_lastProcessedFrame.TryGetValue(eventKey, out int lastFrame) && lastFrame == frame)
+            return false;
+        _lastProcessedFrame[eventKey] = frame;
+        return true;
     }
 }

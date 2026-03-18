@@ -13,7 +13,7 @@ internal static class PlayerDamagePatch
     [HarmonyPostfix]
     private static void DamagePlayerClientRpcPatch(PlayerControllerB __instance, int damageNumber)
     {
-        if (!NetworkUtils.IsClientRpcExecution(__instance)) return;
+        if (!NetworkUtils.ShouldProcess($"damage_{__instance.GetInstanceID()}_{damageNumber}")) return;
         if (!PlayerUtils.ShouldTrackPlayer(__instance)) return;
 
         string playerName = PlayerUtils.GetPlayerName(__instance);
