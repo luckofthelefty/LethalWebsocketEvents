@@ -1,11 +1,11 @@
 {
     "name": "LethalWebsocketEvents",
-    "version_number": "1.0.2",
+    "version_number": "1.0.3",
     "website_url": "https://github.com/luckofthelefty/LethalWebsocketEvents",
     "description": "Streams in-game events over WebSocket for Streamerbot integration. Deaths, monsters, items, rounds.",
     "dependencies": [
         "BepInEx-BepInExPack-5.4.2100",
-        "dotnet_lethal_company-WebSocketSharp_netstandard-1.0.1",
-        "dotnet_lethal_company-Newtonsoft_Json-13.0.3"
+        "dotnet_lethal_company-WebSocketSharp_netstandard-1.0.100",
+        "dotnet_lethal_company-Newtonsoft_Json-13.0.400"
     ]
 }

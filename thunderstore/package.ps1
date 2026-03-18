@@ -2,11 +2,11 @@
 # Run from the repo root: .\thunderstore\package.ps1
 #
 # Requires: icon.png (256x256) in thunderstore/
-# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.2.zip
+# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.3.zip
 
 $ErrorActionPreference = "Stop"
 
-$version = "1.0.2"
+$version = "1.0.3"
 $outDir = "$PSScriptRoot\build"
 $zipName = "LuckOfTheLefty-LethalWebsocketEvents-$version.zip"
 
