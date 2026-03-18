@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace com.github.luckofthelefty.LethalEvents.Helpers;
+namespace com.github.luckofthelefty.LethalWebsocketEvents.Helpers;
 
 internal static class NetworkUtils
 {

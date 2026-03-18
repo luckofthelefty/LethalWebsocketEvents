@@ -1,4 +1,4 @@
-# LethalEvents
+# LethalWebsocketEvents
 
 A BepInEx mod for Lethal Company that streams in-game events over WebSocket for Streamerbot integration.
 
@@ -104,7 +104,7 @@ The `causeOfDeath` field in `player_death` events can be:
 
 Config file is created at:
 ```
-%localappdata%\..\LocalLow\ZeekerssRBLX\Lethal Company\LethalEvents\global.cfg
+%localappdata%\..\LocalLow\ZeekerssRBLX\Lethal Company\LethalWebsocketEvents\global.cfg
 ```
 
 | Setting | Default | Description |
@@ -125,7 +125,7 @@ Config file is created at:
 ## Installation
 
 1. Install [BepInEx 5](https://github.com/BepInEx/BepInEx) for Lethal Company
-2. Place `com.github.luckofthelefty.LethalEvents.dll` in `BepInEx/plugins/`
+2. Place `com.github.luckofthelefty.LethalWebsocketEvents.dll` in `BepInEx/plugins/`
 3. Launch the game
 
 ## Building
@@ -135,7 +135,7 @@ dotnet restore
 dotnet build
 ```
 
-Output DLL: `LethalEvents/bin/Debug/netstandard2.1/com.github.luckofthelefty.LethalEvents.dll`
+Output DLL: `LethalWebsocketEvents/bin/Debug/netstandard2.1/com.github.luckofthelefty.LethalWebsocketEvents.dll`
 
 ## Support
 

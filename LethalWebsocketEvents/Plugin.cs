@@ -1,11 +1,11 @@
 using BepInEx;
-using com.github.luckofthelefty.LethalEvents.Managers;
-using com.github.luckofthelefty.LethalEvents.Patches;
-using com.github.luckofthelefty.LethalEvents.Server;
+using com.github.luckofthelefty.LethalWebsocketEvents.Managers;
+using com.github.luckofthelefty.LethalWebsocketEvents.Patches;
+using com.github.luckofthelefty.LethalWebsocketEvents.Server;
 using HarmonyLib;
 using System.Threading.Tasks;
 
-namespace com.github.luckofthelefty.LethalEvents;
+namespace com.github.luckofthelefty.LethalWebsocketEvents;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 internal class Plugin : BaseUnityPlugin
@@ -20,8 +20,8 @@ internal class Plugin : BaseUnityPlugin
     {
         Instance = this;
 
-        LethalEvents.Logger.Initialize(BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID));
-        LethalEvents.Logger.LogInfo($"{MyPluginInfo.PLUGIN_NAME} v{MyPluginInfo.PLUGIN_VERSION} loaded!");
+        LethalWebsocketEvents.Logger.Initialize(BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID));
+        LethalWebsocketEvents.Logger.LogInfo($"{MyPluginInfo.PLUGIN_NAME} v{MyPluginInfo.PLUGIN_VERSION} loaded!");
 
         ConfigManager.Initialize(Config);
 

@@ -2,7 +2,7 @@
 # Run from the repo root: .\thunderstore\package.ps1
 #
 # Requires: icon.png (256x256) in thunderstore/
-# Produces: thunderstore/LuckOfTheLefty-LethalEvents-1.0.0.zip
+# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.0.zip
 #
 # NOTE: This mod requires websocket-sharp.dll and Newtonsoft.Json.dll bundled
 #       alongside the main DLL. The script pulls them from the NuGet cache.
@@ -11,7 +11,7 @@ $ErrorActionPreference = "Stop"
 
 $version = "1.0.0"
 $outDir = "$PSScriptRoot\build"
-$zipName = "LuckOfTheLefty-LethalEvents-$version.zip"
+$zipName = "LuckOfTheLefty-LethalWebsocketEvents-$version.zip"
 
 # Clean
 if (Test-Path $outDir) { Remove-Item $outDir -Recurse -Force }
@@ -23,7 +23,7 @@ dotnet build -c Release
 Pop-Location
 
 # Gather files
-$dllSource = "$PSScriptRoot\..\LethalEvents\bin\Release\netstandard2.1\com.github.luckofthelefty.LethalEvents.dll"
+$dllSource = "$PSScriptRoot\..\LethalWebsocketEvents\bin\Release\netstandard2.1\com.github.luckofthelefty.LethalWebsocketEvents.dll"
 
 Copy-Item "$PSScriptRoot\manifest.json" $outDir
 Copy-Item "$PSScriptRoot\CHANGELOG.md" $outDir

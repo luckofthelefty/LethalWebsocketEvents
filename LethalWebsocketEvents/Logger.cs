@@ -1,6 +1,6 @@
 using BepInEx.Logging;
 
-namespace com.github.luckofthelefty.LethalEvents;
+namespace com.github.luckofthelefty.LethalWebsocketEvents;
 
 internal static class Logger
 {

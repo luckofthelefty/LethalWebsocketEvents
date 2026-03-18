@@ -1,6 +1,6 @@
 using BepInEx.Configuration;
 
-namespace com.github.luckofthelefty.LethalEvents.Managers;
+namespace com.github.luckofthelefty.LethalWebsocketEvents.Managers;
 
 internal static class ConfigManager
 {

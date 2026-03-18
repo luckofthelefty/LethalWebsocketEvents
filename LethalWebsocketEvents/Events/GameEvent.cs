@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace com.github.luckofthelefty.LethalEvents.Events;
+namespace com.github.luckofthelefty.LethalWebsocketEvents.Events;
 
 internal class GameEvent
 {

@@ -1,8 +1,8 @@
-using com.github.luckofthelefty.LethalEvents.Managers;
+using com.github.luckofthelefty.LethalWebsocketEvents.Managers;
 using GameNetcodeStuff;
 using System;
 
-namespace com.github.luckofthelefty.LethalEvents.Helpers;
+namespace com.github.luckofthelefty.LethalWebsocketEvents.Helpers;
 
 internal static class PlayerUtils
 {

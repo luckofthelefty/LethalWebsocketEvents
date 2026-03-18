@@ -1,5 +1,5 @@
-using com.github.luckofthelefty.LethalEvents.Events;
-using com.github.luckofthelefty.LethalEvents.Managers;
+using com.github.luckofthelefty.LethalWebsocketEvents.Events;
+using com.github.luckofthelefty.LethalWebsocketEvents.Managers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using UnityEngine;
 using WebSocketSharp.Server;
 
-namespace com.github.luckofthelefty.LethalEvents.Server;
+namespace com.github.luckofthelefty.LethalWebsocketEvents.Server;
 
 internal static class EventServer
 {

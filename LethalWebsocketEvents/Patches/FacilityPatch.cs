@@ -1,9 +1,9 @@
-using com.github.luckofthelefty.LethalEvents.Helpers;
-using com.github.luckofthelefty.LethalEvents.Server;
+using com.github.luckofthelefty.LethalWebsocketEvents.Helpers;
+using com.github.luckofthelefty.LethalWebsocketEvents.Server;
 using HarmonyLib;
 using System.Collections.Generic;
 
-namespace com.github.luckofthelefty.LethalEvents.Patches;
+namespace com.github.luckofthelefty.LethalWebsocketEvents.Patches;
 
 [HarmonyPatch(typeof(Landmine))]
 internal static class LandminePatch
