@@ -2,14 +2,11 @@
 # Run from the repo root: .\thunderstore\package.ps1
 #
 # Requires: icon.png (256x256) in thunderstore/
-# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.1.zip
-#
-# NOTE: This mod requires websocket-sharp.dll and Newtonsoft.Json.dll bundled
-#       alongside the main DLL. The script pulls them from the NuGet cache.
+# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.2.zip
 
 $ErrorActionPreference = "Stop"
 
-$version = "1.0.1"
+$version = "1.0.2"
 $outDir = "$PSScriptRoot\build"
 $zipName = "LuckOfTheLefty-LethalWebsocketEvents-$version.zip"
 
@@ -39,26 +36,6 @@ if (Test-Path "$PSScriptRoot\icon.png") {
 $pluginsDir = "$outDir\plugins"
 New-Item -ItemType Directory -Path $pluginsDir | Out-Null
 Copy-Item $dllSource $pluginsDir
-
-# Bundle dependency DLLs from NuGet cache
-$nugetCache = "$env:USERPROFILE\.nuget\packages"
-
-$wsSharpDll = Get-ChildItem "$nugetCache\websocketsharp-netstandard\1.0.1\lib\netstandard2.0\websocket-sharp.dll" -ErrorAction SilentlyContinue
-$newtonsoftDll = Get-ChildItem "$nugetCache\newtonsoft.json\13.0.3\lib\netstandard2.0\Newtonsoft.Json.dll" -ErrorAction SilentlyContinue
-
-if ($wsSharpDll) {
-    Copy-Item $wsSharpDll.FullName $pluginsDir
-    Write-Host "Bundled: websocket-sharp.dll" -ForegroundColor Gray
-} else {
-    Write-Warning "websocket-sharp.dll not found in NuGet cache! Run 'dotnet restore' first."
-}
-
-if ($newtonsoftDll) {
-    Copy-Item $newtonsoftDll.FullName $pluginsDir
-    Write-Host "Bundled: Newtonsoft.Json.dll" -ForegroundColor Gray
-} else {
-    Write-Warning "Newtonsoft.Json.dll not found in NuGet cache! Run 'dotnet restore' first."
-}
 
 # Zip
 $zipPath = "$PSScriptRoot\$zipName"

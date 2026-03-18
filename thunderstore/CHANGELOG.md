@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Use Thunderstore dependency packages for WebSocketSharp and Newtonsoft.Json instead of bundling DLLs
+
 ## 1.0.1
 
 - Renamed from LethalEvents to LethalWebsocketEvents
