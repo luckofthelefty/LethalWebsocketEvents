@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Renamed from LethalEvents to LethalWebsocketEvents
+
 ## 1.0.0
 
 - Initial release

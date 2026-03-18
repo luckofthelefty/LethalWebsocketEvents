@@ -1,6 +1,6 @@
 {
     "name": "LethalWebsocketEvents",
-    "version_number": "1.0.0",
+    "version_number": "1.0.1",
     "website_url": "https://github.com/luckofthelefty/LethalWebsocketEvents",
     "description": "Streams in-game events over WebSocket for Streamerbot integration. Deaths, monsters, items, rounds.",
     "dependencies": [

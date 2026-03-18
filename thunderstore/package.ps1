@@ -2,14 +2,14 @@
 # Run from the repo root: .\thunderstore\package.ps1
 #
 # Requires: icon.png (256x256) in thunderstore/
-# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.0.zip
+# Produces: thunderstore/LuckOfTheLefty-LethalWebsocketEvents-1.0.1.zip
 #
 # NOTE: This mod requires websocket-sharp.dll and Newtonsoft.Json.dll bundled
 #       alongside the main DLL. The script pulls them from the NuGet cache.
 
 $ErrorActionPreference = "Stop"
 
-$version = "1.0.0"
+$version = "1.0.1"
 $outDir = "$PSScriptRoot\build"
 $zipName = "LuckOfTheLefty-LethalWebsocketEvents-$version.zip"
 
